@@ -2,23 +2,16 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
+	<meta name="theme-color" content="#003B00">
 	<title>Decryptron</title>	  
+	<script type="module" src="decryptron13.js" async></script>
+	<style>
+	html, body { margin: 0; height: 100%; }
+	body { background: #0D0208; display: flex; }
+	</style>
 </head>
 
 <body>
-
-<script type="module">
-import {decrypt, combine, randomUntil, rotateBy, wait} from './decrypt.js'
-(async () => {
-	const encrypted = 'ubynzhaqvgb'
-	for await(let progress of decrypt(encrypted, combine(
-		// make it look harder producing random gibberish longer for each character.
-		randomUntil(i => wait(i* 500)),
-		// rotate characters sequentially until reaching the 13th rotation.
-		rotateBy(13),
-	))) document.body.innerText = progress
-})()
-</script>"
-
+	<decryptron-13>uryybjbeyq</decryptron-13>
 </body>
 </html>
