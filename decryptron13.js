@@ -25,6 +25,7 @@ button {
   background: none;
   border: 4px solid var(--color-bright);
   border-radius: 5vmin;
+  color: var(--color-bright);
   font-size: 5vmin;
   height: 10vmin;
   margin-right: 5vmin;
