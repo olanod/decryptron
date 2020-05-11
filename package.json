@@ -1,0 +1,12 @@
+{
+  "name": "decryptron",
+  "version": "1.0.0",
+  "description": "Decrypt messages hollywood style",
+  "main": "decrypt.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Olano <daniel@olanod.com>",
+  "license": "LGPL-3.0-or-later"
+}
