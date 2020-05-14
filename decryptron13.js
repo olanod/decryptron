@@ -1,4 +1,4 @@
-import {decrypt, combine, randomUntil, rotateBy, wait} from './decrypt.js'
+import {decrypt} from './decrypt.js'
 
 const raf = requestAnimationFrame
 const html = s => new DOMParser()
@@ -72,10 +72,7 @@ export class Decryptron13 extends HTMLElement {
 		const $out = this._shadow.querySelector('output')
 		$out.hidden = false
 		$out.classList.add('pulse')
-		for await(let text of decrypt(this.message, combine(
-			randomUntil(i => wait(i* 500)),
-			rotateBy(13),
-		))) {
+		for await(let text of decrypt(this.message)) {
 			this._decrypted = text
 			cancelAnimationFrame(rafId)
 			rafId = raf(() => {

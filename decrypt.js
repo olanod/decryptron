@@ -55,17 +55,6 @@ const delayedRotation = (c, {step = 1, delay} = {}) =>
 	waitThen(() => rotN(c, step), delay)
 const randCharDelayed = delay => waitThen(randChar, delay)
 
-// decrypt the provided message 
-export const decrypt = async function*(msg, charDecryptor) {
-	yield msg
-	const decrypted = [...msg]
-	const chars = mix(decrypted.map(charDecryptor))
-	for await (let {idx, value} of chars) {
-		decrypted[idx] = value
-		yield decrypted.join('')
-	}
-}
-
 // -- character generators --
 // produce random characters until the wait promise resolves,
 // additionaly the speed function can specify the frequency of character generation.
@@ -85,14 +74,29 @@ export const combine = (...generators) => (c, i) =>
 		for (let gen of generators) yield* gen(c, i)
 	}()
 
+const defaultCharAnimation = combine(
+	// make it look harder producing random gibberish longer for each character.
+	randomUntil(i => wait(i* 500)),
+	// rotate characters sequentially until reaching the 13th rotation.
+	rotateBy(13),
+)
+
+// decrypt the provided message 
+export const decrypt = async function*(msg, charDecryptor = defaultCharAnimation) {
+	yield msg
+	const decrypted = [...msg]
+	const chars = mix(decrypted.map(charDecryptor))
+	for await (let {idx, value} of chars) {
+		decrypted[idx] = value
+		yield decrypted.join('')
+	}
+}
+
 // rot13 example usage in node.js
 if (typeof process !== 'undefined') (async () => {
 	const encrypted = (process.argv[2] || '').toLowerCase()
-	for await(let it of decrypt(encrypted, combine(
-		// make it look harder producing random gibberish longer for each character.
-		randomUntil(i => wait(i* 500)),
-		// rotate characters sequentially until reaching the 13th rotation.
-		rotateBy(13),
-	))) process.stdout.write(`\r${it}`)
+	if (!encrypted) return console.error('Missing argument with to decrypt')
+	for await(let it of decrypt(encrypted))
+		process.stdout.write(`\r${it}`)
 })()
 
