@@ -1,9 +1,10 @@
-import {decrypt} from './decrypt.js'
+import { decrypt } from "./decrypt.js";
 
-const raf = requestAnimationFrame
-const html = s => new DOMParser()
-	.parseFromString(`<template>${s}</template>`, 'text/html')
-	.querySelector('template')
+const raf = requestAnimationFrame;
+const html = (s) =>
+  new DOMParser()
+    .parseFromString(`<template>${s}</template>`, "text/html")
+    .querySelector("template");
 
 const template = html`
 <style>
@@ -48,39 +49,39 @@ button:active { box-shadow: 0 0 0 3px var(--color-bright); }
   <div id="msg"><slot></slot></div>
   <output hidden></output>
 </div>
-`
+`;
 
 export class Decryptron13 extends HTMLElement {
-	message = ''
-	_decrypted = ''
+  message = "";
+  _decrypted = "";
 
-	constructor() {
-		super()
-		this._shadow = this.attachShadow({mode: 'open'})
-		this._shadow.append(template.content.cloneNode(true))
-	}
+  constructor() {
+    super();
+    this._shadow = this.attachShadow({ mode: "open" });
+    this._shadow.append(template.content.cloneNode(true));
+  }
 
-	connectedCallback() {
-		this.message = this.textContent
-		this._shadow.querySelector('button')
-			.addEventListener('click', this.decrypt.bind(this))
-	}
+  connectedCallback() {
+    this.message = this.textContent;
+    this._shadow.querySelector("button")
+      .addEventListener("click", this.decrypt.bind(this));
+  }
 
-	async decrypt() {
-		let rafId
-		const $msg = this._shadow.querySelector('#msg').hidden = true
-		const $out = this._shadow.querySelector('output')
-		$out.hidden = false
-		$out.classList.add('pulse')
-		for await(let text of decrypt(this.message)) {
-			this._decrypted = text
-			cancelAnimationFrame(rafId)
-			rafId = raf(() => {
-				$out.textContent = this._decrypted
-			})
-		}
-		$out.classList.remove('pulse')
-		$out.classList.add('done')
-	}
+  async decrypt() {
+    let rafId;
+    const $msg = this._shadow.querySelector("#msg").hidden = true;
+    const $out = this._shadow.querySelector("output");
+    $out.hidden = false;
+    $out.classList.add("pulse");
+    for await (let text of decrypt(this.message)) {
+      this._decrypted = text;
+      cancelAnimationFrame(rafId);
+      rafId = raf(() => {
+        $out.textContent = this._decrypted;
+      });
+    }
+    $out.classList.remove("pulse");
+    $out.classList.add("done");
+  }
 }
-customElements.define('decryptron-13', Decryptron13)
+customElements.define("decryptron-13", Decryptron13);
