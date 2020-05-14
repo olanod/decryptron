@@ -82,7 +82,7 @@ const defaultCharAnimation = combine(
 )
 
 // decrypt the provided message 
-export const decrypt = async function*(msg, charDecryptor = defaultCharAnimation) {
+export const decrypt = async function*(msg = 'uryybjbeyq', charDecryptor = defaultCharAnimation) {
 	yield msg
 	const decrypted = [...msg]
 	const chars = mix(decrypted.map(charDecryptor))
@@ -92,11 +92,8 @@ export const decrypt = async function*(msg, charDecryptor = defaultCharAnimation
 	}
 }
 
-// rot13 example usage in node.js
-if (typeof process !== 'undefined') (async () => {
-	const encrypted = (process.argv[2] || '').toLowerCase()
-	if (!encrypted) return console.error('Missing argument with to decrypt')
-	for await(let it of decrypt(encrypted))
-		process.stdout.write(`\r${it}`)
-})()
+// run rot13 example from the terminal with Deno
+if (typeof Deno !== 'undefined')
+	for await(let it of decrypt(Deno.args[0]))
+		await Deno.stdout.write(new TextEncoder().encode(`\r${it}`))
 
