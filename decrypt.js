@@ -93,7 +93,7 @@ export const decrypt = async function*(msg = 'uryybjbeyq', charDecryptor = defau
 }
 
 // run rot13 example from the terminal with Deno
-if (typeof Deno !== 'undefined')
+if (typeof Deno !== 'undefined') (async () => {
 	for await(let it of decrypt(Deno.args[0]))
 		await Deno.stdout.write(new TextEncoder().encode(`\r${it}`))
-
+})()
